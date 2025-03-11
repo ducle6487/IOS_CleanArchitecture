@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-open class Interactor: Interacting, Logging {
+open class Interactor: NSObject, Interacting, Logging {
     public var loggerType: LoggingComponent = .interactor
     
     // MARK: - Instance variables
@@ -18,7 +18,8 @@ open class Interactor: Interacting, Logging {
     
     // MARK: - Lifecycle
 
-    public init() {
+    override public init() {
+        super.init()
         setup()
     }
     

@@ -10,7 +10,7 @@ import SwiftUI
 enum Tabs: String, Identifiable {
     case home
     case employee
-    case news
+    case maps
     case profile
 
     var id: String { rawValue }
@@ -18,7 +18,7 @@ enum Tabs: String, Identifiable {
         switch self {
         case .home: return "Home"
         case .employee: return "Employee"
-        case .news: return "News"
+        case .maps: return "Maps"
         case .profile: return "Profile"
         }
     }
@@ -45,15 +45,15 @@ enum Tabs: String, Identifiable {
                 destination: contract.routeToEmployee,
                 deeplinkHandler: DependencyMap.resolve(\.employeeInteractor)
             )
-        case .news:
+        case .maps:
             return Tab(
                 id: id,
                 icon: Icons.Tabs.home,
                 selectedIcon: Icons.Tabs.homeSelected,
                 name: name,
                 event: Event.Button.Tabs.tapNavNews,
-                destination: contract.routeToNews,
-                deeplinkHandler: DependencyMap.resolve(\.newsInteractor)
+                destination: contract.routeToMaps,
+                deeplinkHandler: DependencyMap.resolve(\.mapsInteractor)
             )
         case .profile:
             return Tab(

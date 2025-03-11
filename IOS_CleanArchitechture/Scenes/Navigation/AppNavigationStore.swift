@@ -15,7 +15,7 @@ final class AppNavigationStore: Store, AppNavigationStoring {
     @NavBuilder var tabs: [Tab] {
         Tabs.home.tab
         Tabs.employee.tab
-        Tabs.news.tab
+        Tabs.maps.tab
         Tabs.profile.tab
     }
 
