@@ -9,7 +9,7 @@ import Foundation
 
 public struct Deeplink {
     public enum LinkType {
-        case tab(Tab)
+        case view
         case external(URL)
     }
 
@@ -29,7 +29,7 @@ public struct Deeplink {
 extension Deeplink.LinkType: Equatable {
     public static func == (lhs: Deeplink.LinkType, rhs: Deeplink.LinkType) -> Bool {
         switch (lhs, rhs) {
-        case (.tab(let lhs), .tab(let rhs)): return lhs.id == rhs.id
+        case (.view, .view): return lhs == rhs
         case (.external(let lhs), .external(let rhs)): return lhs == rhs
         default: return false
         }

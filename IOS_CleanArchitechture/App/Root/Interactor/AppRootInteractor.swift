@@ -25,7 +25,7 @@ final class AppRootInteractor: Interactor, AppRootInteracting {
 
     override func setup() {
         super.setup()
-        router.navigate(to: contract.routeToNavigationRoot)
+        router.navigate(to: contract.routeToHome, deeplinkHandler: DependencyMap.resolve(\.mapsInteractor))
     }
 
     // MARK: - View interaction

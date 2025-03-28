@@ -30,12 +30,12 @@ public struct GenericModuleView: View {
     }
 
     public var body: some View {
-        VStack(spacing: theme.spacing.comfortable) {
+        VStack(spacing: theme.spacing.roomy) {
             if let image {
                 image
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 60)
+                    .frame(height: 120)
             }
             VStack(spacing: theme.spacing.squishy) {
                 title(title)
@@ -46,7 +46,6 @@ public struct GenericModuleView: View {
             button
         }
         .frame(maxWidth: .infinity)
-        .roundedCell(theme.colors.surface)
     }
 
     func title(_ text: String) -> some View {
@@ -70,7 +69,8 @@ struct GenericModuleView_Previews: PreviewProvider {
                 GenericModuleView(
                     title: "No internet connection",
                     description: "Turn back on your internet and try again",
-                    image: nil
+                    button: CombustionButton(title: "Refresh") {},
+                    image: Images.App.lalapok.combustionImage()
                 )
             }
         }

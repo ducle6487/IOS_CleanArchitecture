@@ -64,7 +64,7 @@ public struct CombustionListSection: View {
                     .padding(.horizontal, theme.spacing.comfortable)
             }
                     
-            RoundedShape(.extraLarge, padding: 0, backgroundColor: .clear) {
+            RoundedShape(.large, padding: 0, backgroundColor: .clear) {
                 VStack(spacing: 0) {
                     if headerInside {
                         headerView

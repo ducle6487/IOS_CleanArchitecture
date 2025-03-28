@@ -29,29 +29,32 @@ struct HalfSheetView<Content: View>: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             // background greyed behind sheet
-            Color.black
+            BlurView(style: .dark)
+                .opacity(isPresented ? 0.6 : 0)
                 .allowsHitTesting(isPresented)
-                .opacity(isPresented ? 0.2 : 0)
                 .animation(theme.motion.easeInOutMedium, value: isPresented)
                 .onTapGesture {
-                    // Close sheet on tap outside and trigger dismiss
                     onDismiss()
                     isPresented = false
                 }
-            
-            // Put a background color at the bottom so it doesnt reveal content when the offset is animated
-            // Only for devices that do not have a safe area at the bottom for color to extend into
-            theme.colors.background
-                .frame(maxWidth: .infinity, maxHeight: 50)
-                .opacity(isPresented ? 1 : 0)
-                .animation(theme.motion.easeInOutMedium, value: isPresented)
+//            Color.black
+//                .background(.ultraThinMaterial)
+//                .allowsHitTesting(isPresented)
+//                .opacity(isPresented ? 0.2 : 0)
+//                .blur(radius: 10)
+//                .animation(theme.motion.easeInOutMedium, value: isPresented)
+//                .onTapGesture {
+//                    // Close sheet on tap outside and trigger dismiss
+//                    onDismiss()
+//                    isPresented = false
+//                }
             
             // Transalte our sheet based on presentation state
             sheet
-                .offset(y: max(offset + dragged, -maxDragBigger))
-                .animation(theme.motion.easeInOutMedium, value: isPresented)
-                .animation(theme.motion.easeInOutMedium, value: dragged)
-                .animation(theme.motion.easeInOutMedium, value: offset)
+                .offset(y: max(offset + dragged, 0))
+                .animation(theme.motion.easeOutMedium, value: isPresented)
+                .animation(theme.motion.easeOutMedium, value: dragged)
+                .animation(theme.motion.easeOutMedium, value: offset)
                 .gesture(
                     DragGesture().updating($dragged) { value, state, _ in
                         state = value.translation.height
@@ -69,30 +72,38 @@ struct HalfSheetView<Content: View>: View {
     
     var offset: CGFloat {
         // Offset by at least 600 (avoid a jumping bug when content size changes)
-        isPresented ? 0 : max(contentSize.height, 600)
+        isPresented ? maxDragBigger : max(contentSize.height, 600)
     }
 }
 
 extension HalfSheetView {
     var sheet: some View {
-        content
-            .frame(maxWidth: .infinity)
-            .background(
-                ChildGeometryReader(size: $contentSize) {
-                    Color.clear.ignoresSafeArea()
+        VStack(spacing: 0) {
+            content
+                .padding(.top, 24)
+                .frame(maxWidth: .infinity)
+                .background(
+                    ChildGeometryReader(size: $contentSize) {
+                        Color.clear.ignoresSafeArea()
+                    }
+                )
+                .background(theme.colors.background)
+                .cornerRadius(theme.radius.extraLarge, corners: [.topLeft, .topRight])
+                .overlay(alignment: .top) {
+                    VStack {
+                        Rectangle()
+                            .frame(width: 48, height: 4)
+                            .background(.clear)
+                            .foregroundStyle(theme.colors.onSecondary)
+                            .cornerRadius(theme.radius.small)
+                            .padding()
+                    }
+                    .frame(height: 24)
                 }
-            )
-            .background(theme.colors.background)
-            .cornerRadius(theme.radius.extraLarge, corners: [.topLeft, .topRight])
-            .background(
-                theme.colors.background
-                    .ignoresSafeArea()
-                    // Leave space for rounded corners on parent clipping
-                    .padding(.top, theme.spacing.comfortable)
-            )
-            .safeAreaInset(edge: .bottom) {
-                Color.clear.frame(maxHeight: theme.spacing.comfortable)
-            }
+            
+            theme.colors.background
+                .frame(height: maxDragBigger)
+        }
     }
 }
 
@@ -102,6 +113,8 @@ struct HalfSheetView_Previews: PreviewProvider {
         
         var body: some View {
             ZStack {
+                Color.white.ignoresSafeArea()
+                
                 Button(action: {
                     isPresented.toggle()
                 }) {
@@ -109,8 +122,19 @@ struct HalfSheetView_Previews: PreviewProvider {
                 }
                 
                 HalfSheetView(isPresented: $isPresented, onDismiss: {}) {
-                    Text("Some content")
-                        .frame(height: 300)
+                    VStack {
+                        Spacer()
+                        Text("Search")
+                            .foregroundStyle(.white)
+                        Spacer()
+                        
+                        CombustionButton(title: "Cancel", type: .secondary, action: {
+                            isPresented = false
+                        })
+                    }
+                    .background(.clear)
+                    .padding()
+                    .frame(height: 400)
                 }
                 .frame(maxWidth: .infinity)
             }

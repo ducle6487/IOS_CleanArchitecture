@@ -8,71 +8,77 @@
 import SwiftUI
 
 // MARK: - Result Builder
+
 @resultBuilder
 public struct CombustionSectionBuilder {
     public static func buildBlock(_ components: ListItemCompatible...) -> [ListItemCompatible] {
         components
     }
-    
+
     /// Handle conditional flows within the build block
     public static func buildOptional(_ component: [ListItemCompatible]?) -> [ListItemCompatible] {
         component ?? []
     }
-    
+
     public static func buildEither(first component: [ListItemCompatible]) -> [ListItemCompatible] {
         component
     }
-    
+
     public static func buildEither(second component: [ListItemCompatible]) -> [ListItemCompatible] {
         component
     }
-    
+
     @ViewBuilder
     public static func buildFinalResult(_ components: [ListItemCompatible]) -> some View {
         let items = components.flatMap(\.items)
         let last = items.last
-        
+
         // Build our list items
         ForEach(items, id: \.id) { item in
             VStack(spacing: 0) {
                 if let destination = item.destination {
-                    ListCell(destination: destination()) {
+                    ListCell(destination: destination(),
+                             backgroundColor: item.backgroundColor)
+                    {
                         item.content()
                     }
                 } else if let action = item.action {
                     ListCell(
                         action: action,
-                        chevron: item.actionShowChevron
+                        chevron: item.actionShowChevron,
+                        backgroundColor: item.backgroundColor
                     ) {
                         item.content()
                     }
                 } else {
-                    ListCell {
+                    ListCell(backgroundColor: item.backgroundColor) {
                         item.content()
                     }
                 }
             }
-            
+
             // Add our divider if the item is not last
             if item.id != last?.id {
                 Divider()
+                    .frame(height: 1)
                     .padding(.leading, 16)
             }
         }
     }
-    
+
     /// Handle void code blocks with an empty argument list
-    public static func buildExpression( _ expression: Void) -> [ListItemCompatible] {
+    public static func buildExpression(_ expression: Void) -> [ListItemCompatible] {
         return []
     }
-    
+
     /// Handle conversion of ListItemCompatible to `[ListItemCompatible]`
-    public static func buildExpression( _ expression: ListItemCompatible) -> [ListItemCompatible] {
+    public static func buildExpression(_ expression: ListItemCompatible) -> [ListItemCompatible] {
         return [expression]
     }
 }
 
 // MARK: - List item compatibles
+
 public protocol ListItemCompatible {
     var items: [CombustionListItem] { get }
 }

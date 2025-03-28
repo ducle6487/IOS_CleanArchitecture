@@ -59,11 +59,13 @@ public struct GenericErrorView: View {
 struct GenericErrorView_Previews: PreviewProvider {
     static var previews: some View {
         Page {
-            VStack {
+            VStack(spacing: 24) {
                 GenericErrorView(button: CombustionButton(title: "Refresh") {})
+                    .roundedCell(.black.opacity(0.4))
+                
                 GenericErrorView(
                     error: .errorMessage("Turn back on your internet and try again"),
-                    errorTitle: "No internet connection"
+                    errorTitle: "\nNo internet connection"
                 )
             }
         }

@@ -6,11 +6,11 @@
 //
 
 protocol AppRootRoutingContract {
-    var routeToNavigationRoot: AppNavigationView { get }
+    var routeToHome: MapsView { get }
 }
 
 extension RouterContractFactory: AppRootRoutingContract {
-    var routeToNavigationRoot: AppNavigationView {
-        AppNavigationView()
+    var routeToHome: MapsView {
+        MapsView()
     }
 }

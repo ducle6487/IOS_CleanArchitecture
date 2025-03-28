@@ -29,7 +29,7 @@ public struct ClosablePage<Content: View>: View {
                 HStack(spacing: theme.spacing.comfortable) {
                     Button(action: closeAction) {
                         Image(systemName: "xmark")
-                            .font(.system(size: 17, weight: .semibold))
+                            .font(.headline.weight(.semibold))
                             .foregroundColor(theme.colors.onBackground)
                     }
                     Spacer()

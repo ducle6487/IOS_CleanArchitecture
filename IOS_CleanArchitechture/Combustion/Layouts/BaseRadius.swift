@@ -7,9 +7,9 @@
 
 import Foundation
 
-internal struct BaseRadius: CombustionRadius {
+struct BaseRadius: CombustionRadius {
     var small: CGFloat = TShirtTokens.xxxSmall
     var medium: CGFloat = TShirtTokens.xxSmall
-    var large: CGFloat = TShirtTokens.xSmall
+    var large: CGFloat = TShirtTokens.small
     var extraLarge: CGFloat = TShirtTokens.medium
 }

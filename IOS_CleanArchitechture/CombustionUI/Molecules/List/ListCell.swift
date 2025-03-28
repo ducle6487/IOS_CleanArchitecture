@@ -14,6 +14,7 @@ struct ListCell<Content: View>: View {
     var content: Content
     var action: CellAction?
     var actionChevron: Bool = false
+    var backgroundColor: Color?
     var destination: (() -> AnyView)?
     
     @State var childSize: CGSize = .init(width: 1, height: 50)
@@ -22,10 +23,12 @@ struct ListCell<Content: View>: View {
     init(
         action: @autoclosure @escaping CellAction,
         chevron: Bool = false,
+        backgroundColor: Color? = nil,
         content: () -> Content
     ) {
         self.action = action
         self.actionChevron = chevron
+        self.backgroundColor = backgroundColor
         self.content = content()
     }
     
@@ -33,19 +36,23 @@ struct ListCell<Content: View>: View {
     init(
         action: CellAction? = nil,
         chevron: Bool = false,
+        backgroundColor: Color? = nil,
         content: () -> Content
     ) {
         self.action = action
         self.actionChevron = chevron
+        self.backgroundColor = backgroundColor
         self.content = content()
     }
     
     /// Init that takes a destination for cell items without an action or
     init(
         destination: some View,
+        backgroundColor: Color? = nil,
         content: () -> Content
     ) {
         self.destination = { AnyView(destination) }
+        self.backgroundColor = backgroundColor
         self.content = content()
     }
     
@@ -71,13 +78,13 @@ struct ListCell<Content: View>: View {
         if let destination {
             NavigationLink(destination: destination) {
                 ZStack {
-                    theme.colors.surface
+                    backgroundColor ?? theme.colors.background
                     cellContent
                 }
             }
         } else {
             ZStack {
-                theme.colors.surface
+                backgroundColor ?? theme.colors.background
                 cellContent
             }
         }
@@ -105,9 +112,14 @@ struct ListCell<Content: View>: View {
 
 struct ListCell_Previews: PreviewProvider {
     static var previews: some View {
-        ListCell(action: {}) {
-            Text("Some content")
-        }
+        VStack(content: {
+            Spacer()
+            ListCell(action: {}) {
+                CombustionText(text: "Some content")
+            }
+            Spacer()
+        })
+        .background(.white)
         .previewTheme(for: .light)
     }
 }

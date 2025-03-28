@@ -9,7 +9,6 @@ import Foundation
 import SwiftMessages
 
 class Common {
-    
     static func showError(_ error: Error?) {
         if error != nil {
             if let error = error as? APIError {
@@ -17,8 +16,8 @@ class Common {
             }
             else {
                 let errorCode = (error as? NSError)?.code
-                ///Error code = 13: NO interet connection
-                
+                /// Error code = 13: NO interet connection
+
                 if errorCode == 13 {
                     showSMErrorAlert("There is no internet connection", type: .warning)
                 }
@@ -28,7 +27,7 @@ class Common {
             }
         }
     }
-    
+
     static func showSMErrorAlert(_ message: String, type: Theme = .error) {
         SwiftMessages.show {
             let view = MessageView.viewFromNib(layout: .tabView)
@@ -39,5 +38,4 @@ class Common {
             return view
         }
     }
-    
 }

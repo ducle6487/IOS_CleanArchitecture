@@ -77,11 +77,30 @@ public struct CombustionButton: View {
 
 extension CombustionButton {
     var textColor: Color {
-        type.textColor(for: theme, enabled: isEnabled)
+        switch type {
+        case .custom(let textColor, _, _):
+            textColor
+        default:
+            type.textColor(for: theme, enabled: isEnabled)
+        }
     }
     
     var backgroundColor: Color {
-        type.backgroundColor(for: theme, enabled: isEnabled)
+        switch type {
+        case .custom(_, let backgroundColor, _):
+            backgroundColor
+        default:
+            type.backgroundColor(for: theme, enabled: isEnabled)
+        }
+    }
+    
+    var borderColor: Color {
+        switch type {
+        case .custom(_, _, let borderColor):
+            borderColor
+        default:
+            type.borderColor(for: theme, enabled: isEnabled)
+        }
     }
 }
 
@@ -110,16 +129,19 @@ extension CombustionButton {
                 loadingStack
             }
         }
-        .frame(minHeight: 54)
+        .frame(minHeight: 48)
         .background(backgroundColor)
         .foregroundColor(textColor)
         .cornerRadius(theme.radius.large, antialiased: true)
+        .overlay(
+            RoundedRectangle(cornerRadius: theme.radius.large)
+                .stroke(borderColor, lineWidth: 1)
+        )
     }
     
     var buttonContent: some View {
         Text(title)
-            .font(.system(size: 17))
-            .bold()
+            .font(.footnote.weight(.bold))
     }
     
     var loadingStack: some View {
@@ -165,10 +187,26 @@ public extension CombustionButton {
 struct CombustionButton_Previews: PreviewProvider {
     static var previews: some View {
         // MARK: Primary buttons
+        
+        VStack {
+            CombustionButton(
+                title: "Primary",
+                type: .custom(textColor: .black, backgroundColor: .white.opacity(0.1)),
+                enabled: true,
+                loading: false,
+                action: {}
+            )
+            .background(BlurView(style: .dark)
+                .cornerRadius(10)
+            )
+        }
+        .padding()
+        .previewTheme(for: .light)
 
         VStack {
             CombustionButton(
                 title: "Primary",
+                type: .primary,
                 enabled: true,
                 loading: false,
                 action: {}
@@ -176,6 +214,7 @@ struct CombustionButton_Previews: PreviewProvider {
             
             CombustionButton(
                 title: "Primary loading",
+                type: .primary,
                 enabled: true,
                 loading: true,
                 action: {}
@@ -183,6 +222,7 @@ struct CombustionButton_Previews: PreviewProvider {
             
             CombustionButton(
                 title: "Primary disabled",
+                type: .primary,
                 enabled: false,
                 loading: false,
                 action: {}
@@ -190,6 +230,7 @@ struct CombustionButton_Previews: PreviewProvider {
             
             CombustionButton(
                 title: "Primary disabled loading",
+                type: .primary,
                 enabled: false,
                 loading: true,
                 action: {}

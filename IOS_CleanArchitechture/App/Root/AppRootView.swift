@@ -47,13 +47,22 @@ struct AppRootView: View {
                 )
         }
 
+        // MARK: Toast
+
+        // Global toast subject for presenting toast
+        .toast(isPresented: $router.shouldShowToast,
+               message: router.toastSubject)
+
         // MARK: Full sheet
 
         // Global sheet subject for presenting full sheet overlay
         .fullScreenCover(isPresented: $router.shouldShowFullSheetOverlay) {
-            StatusBarHost {
+            ZStack {
+                BlurView(style: .systemThickMaterialDark)
+
                 router.fullSheetOverlaySubject?.compose()
             }
+            .background(ClearBackgroundView())
             .ignoresSafeArea()
             // Alert subject for surfacing alerts while a sheet is active
             // Will only be triggered if this sheet is presented
@@ -100,6 +109,13 @@ struct AppRootView: View {
         } onDismiss: {
             router.closeHalfSheet()
         }
+
+        // MARK: Dialog
+
+        // Global dialog subject for presenting dialog
+
+        .dialog(isPresented: $router.shouldShowDialog,
+                content: router.dialogSubject)
 
         // MARK: Carousel
 

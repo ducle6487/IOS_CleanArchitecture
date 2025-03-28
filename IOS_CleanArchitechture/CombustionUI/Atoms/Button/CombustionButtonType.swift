@@ -15,6 +15,7 @@ public enum CombustionButtonType {
     case primaryTextOnly
     case secondaryTextOnly
     case tertiaryTextOnly
+    case custom(textColor: Color = .clear, backgroundColor: Color = .clear, borderColor: Color = .clear)
     
     // MARK: - Button text colors
 
@@ -27,7 +28,7 @@ public enum CombustionButtonType {
         case ._primary:
             return theme.colors.onPrimary
         case ._secondary:
-            return theme.colors.onSurface
+            return theme.colors.primary
         case ._tertiary:
             return theme.colors.onError
         case .tertiaryAlternative:
@@ -38,25 +39,29 @@ public enum CombustionButtonType {
             return theme.colors.onPrimary
         case .tertiaryTextOnly:
             return theme.colors.secondary
+        case .custom:
+            return .clear
         }
     }
     
     private func disabledTextColors(_ theme: ThemeProvider) -> Color {
         switch self {
         case ._primary:
-            return theme.colors.onSurface.opacity(0.6)
+            return theme.colors.onSurface.opacity(0.4)
         case ._secondary:
-            return theme.colors.onSurface.opacity(0.6)
+            return theme.colors.onSurface.opacity(0.4)
         case ._tertiary:
-            return theme.colors.onError.opacity(0.6)
+            return theme.colors.onError.opacity(0.4)
         case .tertiaryAlternative:
-            return theme.colors.onSurface.opacity(0.6)
+            return theme.colors.onSurface.opacity(0.4)
         case .primaryTextOnly:
-            return theme.colors.primary.opacity(0.6)
+            return theme.colors.primary.opacity(0.4)
         case .secondaryTextOnly:
-            return theme.colors.onPrimary.opacity(0.6)
+            return theme.colors.onPrimary.opacity(0.4)
         case .tertiaryTextOnly:
-            return theme.colors.onPrimary.opacity(0.6)
+            return theme.colors.onPrimary.opacity(0.4)
+        case .custom:
+            return .clear
         }
     }
     
@@ -71,9 +76,9 @@ public enum CombustionButtonType {
         case ._primary:
             return theme.colors.primary
         case ._secondary(let onSurface):
-            return onSurface ? theme.colors.background : theme.colors.surface
+            return onSurface ? theme.colors.background : .clear
         case ._tertiary:
-            return theme.colors.error
+            return theme.colors.onPrimary
         case .tertiaryAlternative:
             return theme.colors.surface
         case .primaryTextOnly:
@@ -81,6 +86,8 @@ public enum CombustionButtonType {
         case .secondaryTextOnly:
             return .clear
         case .tertiaryTextOnly:
+            return .clear
+        case .custom:
             return .clear
         }
     }
@@ -100,6 +107,56 @@ public enum CombustionButtonType {
         case .secondaryTextOnly:
             return .clear
         case .tertiaryTextOnly:
+            return .clear
+        case .custom:
+            return .clear
+        }
+    }
+    
+    // MARK: - Button border colors
+
+    func borderColor(for theme: ThemeProvider, enabled: Bool) -> Color {
+        enabled ? enabledBorderColors(theme) : disabledBorderColors(theme)
+    }
+    
+    private func enabledBorderColors(_ theme: ThemeProvider) -> Color {
+        switch self {
+        case ._primary:
+            return .clear
+        case ._secondary:
+            return theme.colors.primary
+        case ._tertiary:
+            return .clear
+        case .tertiaryAlternative:
+            return .clear
+        case .primaryTextOnly:
+            return .clear
+        case .secondaryTextOnly:
+            return .clear
+        case .tertiaryTextOnly:
+            return .clear
+        case .custom:
+            return .clear
+        }
+    }
+    
+    private func disabledBorderColors(_ theme: ThemeProvider) -> Color {
+        switch self {
+        case ._primary:
+            return .clear
+        case ._secondary:
+            return .clear
+        case ._tertiary:
+            return .clear
+        case .tertiaryAlternative:
+            return .clear
+        case .primaryTextOnly:
+            return .clear
+        case .secondaryTextOnly:
+            return .clear
+        case .tertiaryTextOnly:
+            return .clear
+        case .custom:
             return .clear
         }
     }

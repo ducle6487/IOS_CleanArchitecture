@@ -17,6 +17,7 @@ public struct DashboardSection<Content: View>: View {
     var text: String
     var secondaryText: String?
     var actionText: String?
+    var actionColor: Color?
     var action: ButtonAction
     var content: Content
 
@@ -24,12 +25,14 @@ public struct DashboardSection<Content: View>: View {
         _ text: String,
         secondaryText: String? = nil,
         actionText: String? = nil,
+        actionColor: Color? = nil,
         action: @escaping ButtonAction = {},
         @ViewBuilder content: () -> Content
     ) {
         self.text = text
         self.secondaryText = secondaryText
         self.actionText = actionText
+        self.actionColor = actionColor
         self.action = action
         self.content = content()
     }
@@ -38,12 +41,8 @@ public struct DashboardSection<Content: View>: View {
         VStack(alignment: .leading, spacing: theme.spacing.cozy) {
             header
 
-            RoundedShape(.extraLarge) {
-                // make our content full width for the surface
-                // card to wrap around
-                content
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
+            content
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -53,7 +52,8 @@ public struct DashboardSection<Content: View>: View {
     private var header: some View {
         HStack(spacing: theme.spacing.cozy) {
             Text(text)
-                .font(.headline)
+                .foregroundStyle(theme.colors.onSurface)
+                .font(.caption.weight(.semibold))
                 .accessibilityIdentifier("section-title")
 
             Spacer()
@@ -63,15 +63,16 @@ public struct DashboardSection<Content: View>: View {
                     Text(actionText)
                         .font(.caption)
                 }
-                .foregroundColor(theme.colors.primary)
+                .foregroundColor(actionColor ?? theme.colors.primary)
                 .accessibilityIdentifier("section-action")
             } else if let secondaryText {
                 Text(secondaryText)
-                    .font(.caption)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(theme.colors.onSurface)
             }
         }
         .padding(.horizontal, theme.spacing.cozy)
-        .foregroundColor(theme.colors.onBackground)
+        .foregroundColor(.white)
     }
 }
 
@@ -79,8 +80,9 @@ public struct DashboardSection<Content: View>: View {
 
 struct DashboardSection_Previews: PreviewProvider {
     static var previews: some View {
-        DashboardSection("Section 3") {
+        DashboardSection("Section 3", actionText: "see more", actionColor: .green, action: {}) {
             Text("This is a simple section without secondary text or actions.")
+                .foregroundStyle(.white)
                 .padding()
         }
         .previewTheme(for: .light)

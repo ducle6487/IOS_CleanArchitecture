@@ -85,6 +85,7 @@ class APIService {
                                             })
                                             .store(in: &self.cancelBag)
                                         case .failure(let error):
+                                            AuthenticationService.shared.clearToken()
                                             promise(.failure(error))
                                         }
                                     }

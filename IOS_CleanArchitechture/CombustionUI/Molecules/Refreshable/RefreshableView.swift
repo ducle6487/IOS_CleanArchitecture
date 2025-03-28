@@ -91,7 +91,7 @@ public struct RefreshableView<Content: View>: View {
                 .padding(theme.spacing.cozy)
                 .frame(maxWidth: .infinity)
                 .frame(height: max(scrollDelegate.offset, 0))
-                .background(theme.colors.primary.opacity(0.1))
+//                .background(theme.colors.background)
                 .clipped()
             }
             .frame(maxHeight: .infinity, alignment: .top)

@@ -8,17 +8,14 @@
 import SwiftUI
 
 public class Router: ObservableObject, AnyObservableObject {
-    @Inject(\.appNavigationStore) var navigationStore
-    
     // Backstack navigation type, for tracking previous navigation
     private enum NavType {
         case root
-        case tab
     }
     
     // MARK: - Backstack
 
-    private var backstack: [(navType: NavType, view: RouteableView?, tab: Tab?)] = []
+    private var backstack: [(navType: NavType, view: RouteableView?)] = []
     
     /// Pop Root Stack
     ///
@@ -28,7 +25,6 @@ public class Router: ObservableObject, AnyObservableObject {
         if let last = backstack.popLast() {
             switch last.navType {
             case .root: rootViewSubject = last.view
-            case .tab: tabSelectedSubject = last.tab
             }
         }
     }
@@ -36,6 +32,7 @@ public class Router: ObservableObject, AnyObservableObject {
     // MARK: - Root navigation
 
     @Published public private(set) var rootViewSubject: RouteableView?
+    @Published public private(set) var rootViewDeeplinkHandler: (any DeeplinkHandler)?
     
     /// Navigate
     ///
@@ -45,42 +42,17 @@ public class Router: ObservableObject, AnyObservableObject {
     /// Maintains the backstack for recall and navigation back to the previous location
     ///
     /// - parameter view: the view to navigate the root view subject to
-    public func navigate(to view: some View) {
+    public func navigate(to view: some View, deeplinkHandler: (any DeeplinkHandler)?) {
         Task { @MainActor in
             // Add our last routeable view to the backstack for recall
             if let rootViewSubject {
-                backstack.append((navType: NavType.root, view: rootViewSubject, tab: nil))
+                backstack.append((navType: NavType.root, view: rootViewSubject))
             }
             // Wrap our new view for composition and navigate
             rootViewSubject = RouteableView(view)
+            rootViewDeeplinkHandler = deeplinkHandler
         }
     }
-    
-    // MARK: - Tab navigation
-
-    /// Selected Tab Subject
-    ///
-    /// The current selected tab subject, this should be set to the identifier of the tabSubject.
-    /// This is bound in the AppNavigationView.
-    ///
-    /// - NOTE: AppNavigationView binds these tabSubjects to their respective views.
-    @Published public var tabSelectedSubject: Tab? {
-        didSet {
-            // Add our tab change to the navigation backstack
-            if let tab = oldValue {
-                backstack.append((navType: NavType.tab, view: nil, tab: tab))
-            }
-        }
-    }
-    
-    public func navigate(to tab: Tab) {
-        // If our tab exists in the tab bar navigate to it
-        if let tab = navigationStore.tabs.first(where: { $0.id == tab.id }) {
-            tabSelectedSubject = tab
-        }
-    }
-    
-    @Published public var isTabBarVisible: Bool = true
     
     // MARK: - Full sheet presentation
 
@@ -248,6 +220,58 @@ public class Router: ObservableObject, AnyObservableObject {
     /// Sets the alertSubject to not active
     public func closeAlert() {
         alertSubject = nil
+    }
+    
+    // MARK: Dialog presentation
+    
+    @Published public var shouldShowDialog: Bool = false
+    
+    public private(set) var dialogSubject: DialogContent? {
+        didSet {
+            // This will trigger objectWillChange on the shouldShow @Published
+            shouldShowDialog = dialogSubject != nil
+        }
+    }
+    
+    /// Opens an dialog with the provided model
+    ///
+    /// - parameter dialog: the dialog to open
+    public func showDialog(with dialog: DialogContent) {
+        // Wrap our new view for composition and open
+        dialogSubject = dialog
+    }
+    
+    /// Closes the dialog
+    ///
+    /// Sets the dialogSubject to not active
+    public func closeDialog() {
+        dialogSubject = nil
+    }
+    
+    // MARK: Toast presentation
+    
+    @Published public var shouldShowToast: Bool = false
+    
+    public private(set) var toastSubject: String? {
+        didSet {
+            // This will trigger objectWillChange on the shouldShow @Published
+            shouldShowToast = toastSubject != nil
+        }
+    }
+    
+    /// Opens an toast with the provided model
+    ///
+    /// - parameter Toast: the toast to open
+    public func showToast(with toast: String) {
+        // Wrap our new view for composition and open
+        toastSubject = toast
+    }
+    
+    /// Closes the toast
+    ///
+    /// Sets the toastSubject to not active
+    public func closeToast() {
+        toastSubject = nil
     }
 }
 

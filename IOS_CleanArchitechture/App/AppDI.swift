@@ -9,7 +9,6 @@ import OSLog
 
 extension AppDelegate {
     func registerDI() {
-        register(\.appNavigationStore, dependency: AppNavigationStore())
         register(\.analytics, dependency: RemoteAnalytics())
         register(\.deeplinking, dependency: DeeplinkInteractor())
     }

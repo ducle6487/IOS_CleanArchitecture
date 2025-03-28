@@ -12,7 +12,7 @@ struct HalfSheetModifier<SheetContent: View>: ViewModifier {
     var presentSheet: Binding<Bool>
     @ViewBuilder var sheetContent: () -> SheetContent
     var onDismiss: () -> Void = {}
-    
+
     init(
         _ presentSheet: Binding<Bool>,
         @ViewBuilder sheetContent: @escaping () -> SheetContent,
@@ -22,11 +22,11 @@ struct HalfSheetModifier<SheetContent: View>: ViewModifier {
         self.sheetContent = sheetContent
         self.onDismiss = onDismiss
     }
-    
+
     func body(content: Content) -> some View {
         ZStack {
             content
-            
+
             HalfSheetView(isPresented: presentSheet, onDismiss: onDismiss) {
                 sheetContent()
             }
@@ -34,18 +34,18 @@ struct HalfSheetModifier<SheetContent: View>: ViewModifier {
     }
 }
 
-extension View {
-    
-    public func halfSheet<Content: View>(
+public extension View {
+    func halfSheet<Content: View>(
         isPresented: Binding<Bool>,
         @ViewBuilder content: @escaping () -> Content,
         onDismiss: @escaping () -> Void = {}
     ) -> some View {
         modifier(HalfSheetModifier(isPresented, sheetContent: content, onDismiss: onDismiss))
     }
-    
+
     // MARK: - Autoclosure wrapper
-    public func halfSheet<Content: View>(
+
+    func halfSheet<Content: View>(
         isPresented: Binding<Bool>,
         @ViewBuilder content: @escaping () -> Content,
         onDismiss: @autoclosure @escaping () -> Void

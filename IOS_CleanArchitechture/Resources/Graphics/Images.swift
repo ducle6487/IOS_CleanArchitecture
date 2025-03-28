@@ -18,6 +18,10 @@ public enum Images {
         public struct Symbol {}
     }
 
+    public enum App {
+        public static let lalapok = Image("lalapok")
+    }
+
     // MARK: - Profile
 
     public struct Profile {}

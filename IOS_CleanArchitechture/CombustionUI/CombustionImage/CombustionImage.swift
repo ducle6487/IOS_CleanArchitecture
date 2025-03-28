@@ -16,7 +16,7 @@ public struct CombustionImage: View {
 
     init(
         image: Image,
-        color: Color? = ColorTokens.Blacks.emploggerBlack60,
+        color: Color? = ColorTokens.Blacks.black60,
         resizable: Bool,
         twoToned: Bool = false
     ) {
@@ -87,7 +87,7 @@ struct CombustionImage_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Icons.System.share.combustionImage()
-                .foregroundStyle(ColorTokens.Blues.emploggerBlue)
+                .foregroundStyle(ColorTokens.Blues.blue)
                 .resizable().frame(width: 30, height: 30)
         }
     }

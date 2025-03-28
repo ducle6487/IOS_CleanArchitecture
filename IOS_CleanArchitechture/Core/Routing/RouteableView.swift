@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct RouteableView {
+public struct RouteableView: Equatable {
     public var identifier: UUID
     private var onDisappear: Router.SheetDismissCompletion?
     private var content: AnyView
@@ -22,8 +22,12 @@ public struct RouteableView {
     public func compose() -> some View {
         content
             .onDisappear {
-                // Trigger our disappear on disappear
                 Task { @MainActor in onDisappear?() }
             }
+    }
+
+    // ✅ Compare by identifier
+    public static func == (lhs: RouteableView, rhs: RouteableView) -> Bool {
+        return lhs.identifier == rhs.identifier
     }
 }

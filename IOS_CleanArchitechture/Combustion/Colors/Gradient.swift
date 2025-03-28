@@ -23,6 +23,28 @@ public extension Gradient {
         ])
     }
     
+    static func linearGradient(colors: [Color]) -> LinearGradient {
+        return LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+    
+    static func angularGradientWithShadow(
+        colors: [Color]? = nil
+    ) -> AngularGradient {
+        return AngularGradient(
+            gradient: Gradient(
+                colors: colors ??
+                    [
+                        ColorTokens.AngularGradient.pink,
+                        ColorTokens.AngularGradient.orange,
+                        ColorTokens.AngularGradient.yellow,
+                        ColorTokens.AngularGradient.cyan,
+                        ColorTokens.AngularGradient.purple,
+                    ]
+            ),
+            center: .center
+        )
+    }
+    
     static func matte(_ color: Color, intensity: CGFloat = 0.5) -> Gradient {
         let uiColor = UIColor(color)
         let i = min(max(intensity, 0), 1)
@@ -31,9 +53,9 @@ public extension Gradient {
         let green = uiColor.greenValue
         let blue = uiColor.blueValue
         
-        let newRed = red+(1-red)*(0.7)
-        let newGreen = green+(1-green)*(0.7)
-        let newBlue = blue+(1-blue)*(0.7)
+        let newRed = red+(1-red) * 0.7
+        let newGreen = green+(1-green) * 0.7
+        let newBlue = blue+(1-blue) * 0.7
         
         let colors = [
             UIColor(red: newRed, green: newGreen, blue: newBlue, alpha: 1.0 * i),
@@ -87,4 +109,20 @@ extension UIColor {
     var greenValue: CGFloat { return CIColor(color: self).green }
     var blueValue: CGFloat { return CIColor(color: self).blue }
     var alphaValue: CGFloat { return CIColor(color: self).alpha }
+}
+
+struct Gradient_Previews: PreviewProvider {
+    static var previews: some View {
+        ZStack {
+            RoundedCorner()
+                .fill(Gradient.angularGradientWithShadow())
+                .frame(width: 88, height: 88)
+                .blur(radius: 8)
+                .opacity(0.6)
+            
+            RoundedCorner()
+                .fill(.white)
+                .frame(width: 56, height: 56)
+        }
+    }
 }

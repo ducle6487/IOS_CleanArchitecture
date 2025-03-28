@@ -16,6 +16,7 @@ public struct CombustionListItem {
     // Property for programatically navigating to a navlink
     var navigate: Bool = false
     var action: ListAction?
+    var backgroundColor: Color?
     var actionShowChevron: Bool = false
     var content: LazyAnyView
     
@@ -24,16 +25,23 @@ public struct CombustionListItem {
         id: UUID = UUID(),
         _ destination: some View,
         navigate: Bool = false,
+        backgroundColor: Color? = nil,
         @ViewBuilder content: @escaping () -> some View
     ) {
         self.id = id
         self.destination = { AnyView(destination) }
+        self.backgroundColor = backgroundColor
         self.content = { AnyView(content()) }
     }
     
     /// Init for list item that does not navigate
-    public init(id: UUID = UUID(), @ViewBuilder content: @escaping () -> some View) {
+    public init(
+        id: UUID = UUID(),
+        backgroundColor: Color? = nil,
+        @ViewBuilder content: @escaping () -> some View
+    ) {
         self.id = id
+        self.backgroundColor = backgroundColor
         self.content = { AnyView(content()) }
     }
     
@@ -42,11 +50,13 @@ public struct CombustionListItem {
         id: UUID = UUID(),
         action: ListAction? = nil,
         chevron: Bool = false,
+        backgroundColor: Color? = nil,
         @ViewBuilder content: @escaping () -> some View
     ) {
         self.id = id
         self.action = action
         self.actionShowChevron = chevron
+        self.backgroundColor = backgroundColor
         self.content = { AnyView(content()) }
     }
     
@@ -55,8 +65,15 @@ public struct CombustionListItem {
         id: UUID = UUID(),
         action: @escaping @autoclosure ListAction,
         chevron: Bool = false,
+        backgroundColor: Color? = nil,
         @ViewBuilder content: @escaping () -> some View
     ) {
-        self.init(id: id, action: { action() }, chevron: chevron, content: content)
+        self.init(
+            id: id,
+            action: { action() },
+            chevron: chevron,
+            backgroundColor: backgroundColor,
+            content: content
+        )
     }
 }

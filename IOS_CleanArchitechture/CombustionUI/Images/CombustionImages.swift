@@ -11,6 +11,6 @@ enum CombustionImages {
     enum Placeholders {
         static let rewards = Image("placeholder_rewards")
         static let shopReward = Image("placeholder_shop_reward")
-        static let genericError = Image("placeholder_generic_error")
+        static let genericError = Image("lalapok")
     }
 }

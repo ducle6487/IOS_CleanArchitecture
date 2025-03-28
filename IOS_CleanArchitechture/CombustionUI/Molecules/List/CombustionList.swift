@@ -29,20 +29,27 @@ struct CombustionList_Previews: PreviewProvider {
         CombustionList {
             CombustionListSection {
                 CombustionListItem(action: {}) {
-                    Text("Some text")
+                    HStack {
+                        Icons.App.cross.combustionImage()
+                        CombustionText(text: "Some text")
+                    }
                 }
                 CombustionListItem {
-                    Text("Some text")
+                    CombustionText(text: "Some text")
                 }
             }
 
             CombustionListSection {
+                CombustionText(text: "header")
+                    .font(.caption.weight(.semibold))
+            } content: {
                 CombustionListItem(action: {}) {
-                    Text("Some text")
+                    CombustionText(text: "Some text")
                 }
-                CombustionListItem {
-                    Text("Some text")
-                }
+            }
+
+            CombustionListItem {
+                CombustionText(text: "Some text")
             }
         }
         .previewTheme(for: .light)

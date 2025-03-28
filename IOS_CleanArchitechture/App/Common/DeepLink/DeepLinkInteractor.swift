@@ -24,10 +24,11 @@ class DeeplinkInteractor: Interactor, DeeplinkInteracting {
     /// - Parameter deeplink: The deeplink to be handled.
     func deeplink(to deeplink: Deeplink) {
         switch deeplink.type {
-        case .tab(let tab):
+        case .view:
             // Navigate to our tab and handle deeplink
-            router.navigate(to: tab)
-            tab.deeplinkHandler?.handle(deeplink: deeplink)
+            router.navigate(to: router.rootViewSubject?.compose(),
+                            deeplinkHandler: router.rootViewDeeplinkHandler)
+            router.rootViewDeeplinkHandler?.handle(deeplink: deeplink)
         case .external(let url): UIApplication.shared.open(url)
         }
     }
@@ -79,9 +80,6 @@ extension DeeplinkInteractor {
 
         // Only resolve our deeplink if it has a tab to execute on
         guard !components.isEmpty else { throw DeeplinkError.notValid }
-        guard let tab = Tabs(rawValue: components.first!.lowercased()) else {
-            throw DeeplinkError.notValid
-        }
 
         // Resolve any actions and querys
         var action: DeeplinkAction?
@@ -90,7 +88,7 @@ extension DeeplinkInteractor {
         }
         let query = components.at(2)
 
-        return Deeplink(type: .tab(tab.tab), action: action, query: query)
+        return Deeplink(type: .view, action: action, query: query)
     }
 }
 
@@ -113,9 +111,6 @@ extension DeeplinkInteractor {
 
         // Only resolve our deeplink if it has a tab to execute on
         guard !components.isEmpty else { throw DeeplinkError.notValid }
-        guard let tab = Tabs(rawValue: components.at(0)!.lowercased()) else {
-            throw DeeplinkError.notValid
-        }
 
         // Resolve any actions and querys
         var action: DeeplinkAction?
@@ -126,6 +121,6 @@ extension DeeplinkInteractor {
         let queries: [URLQueryItem]? = URLComponents(url: url, resolvingAgainstBaseURL: false)?
             .queryItems
 
-        return Deeplink(type: .tab(tab.tab), action: action, queries: queries)
+        return Deeplink(type: .view, action: action, queries: queries)
     }
 }

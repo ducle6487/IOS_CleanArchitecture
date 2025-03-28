@@ -53,7 +53,8 @@ public struct CombustionTextField: View {
                 ChildGeometryReader(size: $inputSize) {
                     Text(inputText.isEmpty ? placeholder : inputText)
                         .font(font)
-                        .opacity(0)
+                        .opacity(inputText.isEmpty ? 1 : 0)
+                        .lineLimit(1)
                 }
                 
                 // Actual text input
@@ -89,7 +90,11 @@ struct CombustionTextField_Previews: PreviewProvider {
                     keyboardStyle: .phoneNumber,
                     returnStyle: .next
                 )
-                .roundedCell(theme.colors.surface)
+                .roundedCell()
+                .frame(width: 200, height: .infinity)
+                .overlay {
+                    RoundedCorner(radius: theme.radius.large).stroke(theme.colors.primary, lineWidth: 1)
+                }
             }
             .padding(theme.spacing.comfortable)
         }
